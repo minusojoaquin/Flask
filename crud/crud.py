@@ -21,8 +21,6 @@ app.config["MYSQL_HOST"] = os.environ["MYSQL_HOST"]
 app.config['PERMANENT_SESSION_LIFETIME'] = 180
 mysql = MySQL(app)
 
-# Decorador de Autenticación
-
 def require_login(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -31,7 +29,6 @@ def require_login(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Ruta del Selector de Tema
 
 @app.route('/set_theme/<theme>')
 @require_login
@@ -40,18 +37,15 @@ def set_theme(theme):
         session['theme'] = theme
     return redirect(request.referrer or url_for('index'))
 
-# Rutas de Autenticación y CRUD
 
 @app.route("/registrar", methods=["GET", "POST"])
 def registrar():
     """Registrar usuario"""
     if request.method == "POST":
 
-        # Ensure username was submitted
         if not request.form.get("usuario"):
             return "el campo usuario es oblicatorio"
 
-        # Ensure password was submitted
         elif not request.form.get("password"):
             return "el campo contraseña es oblicatorio"
 
@@ -59,7 +53,7 @@ def registrar():
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO usuarios (usuario, hash) VALUES (%s,%s)", (request.form.get("usuario"), passhash[17:]))
         if mysql.connection.affected_rows():
-            flash('Se agregó un usuario')  # usa sesión
+            flash('Se agregó un usuario')  
             logging.info("se agregó un usuario")
         mysql.connection.commit()
         return redirect(url_for('index'))
@@ -69,10 +63,10 @@ def registrar():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # Ensure username was submitted
+        
         if not request.form.get("usuario"):
             return "el campo usuario es oblicatorio"
-        # Ensure password was submitted
+        
         elif not request.form.get("password"):
             return "el campo contraseña es oblicatorio"
 
@@ -110,7 +104,7 @@ def add_contact():
         cur.execute("INSERT INTO contactos (nombre, tel, email) VALUES (%s,%s,%s)"
                     , (nombre, tel, email))
         if mysql.connection.affected_rows():
-            flash('Se agregó un contacto')  # usa sesión
+            flash('Se agregó un contacto')  
             logging.info("se agregó un contacto")
             mysql.connection.commit()
     return redirect(url_for('index'))
@@ -121,7 +115,7 @@ def borrar_contacto(id):
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM contactos WHERE id = %s', (id,))
     if mysql.connection.affected_rows():
-        flash('Se eliminó un contacto')  # usa sesión
+        flash('Se eliminó un contacto')  
         logging.info("se eliminó un contacto")
         mysql.connection.commit()
     return redirect(url_for('index'))
@@ -145,7 +139,7 @@ def actualizar_contacto(id):
         cur = mysql.connection.cursor()
         cur.execute("UPDATE contactos SET nombre=%s, tel=%s, email=%s WHERE id=%s", (nombre, tel, email, id))
     if mysql.connection.affected_rows():
-        flash('Se actualizó un contacto')  # usa sesión
+        flash('Se actualizó un contacto')  
         logging.info("se actualizó un contacto")
         mysql.connection.commit()
     return redirect(url_for('index'))
