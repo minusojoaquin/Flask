@@ -1,10 +1,61 @@
-{% extends "layout.html" %} {% block body %}
+{% extends "layout.html" %}
+{% block body %}
+<div class="row pt-5">
+  <div class="col-md-5 mx-auto">
+    <div class="card shadow border-0">
+      
+      <div class="card-header bg-dark text-white text-center py-3">
+        <h4 class="mb-0 fw-bold">Modificar Contacto</h4>
+      </div>
+      
+      <div class="card-body p-4">
+        <form action="{{ url_for('actualizar_contacto', id=contacto.0) }}" 
+              method="POST" 
+              onsubmit="return confirm('¿Está seguro de que desea aplicar y guardar las modificaciones en este contacto?');">
+          
+          <div class="form-group mb-3">
+            <label for="nombre" class="form-label fw-bold text-body">Nombre Completo</label>
+            <input type="text" 
+                   name="nombre" 
+                   id="nombre" 
+                   class="form-control form-control-lg" 
+                   value="{{ contacto.1 }}" 
+                   required>
+          </div>
 
-<form action="{{url_for('actualizar_contacto',id=contacto.0)}}" method="POST">
-  <input type="text" name="nombre" value="{{contacto.1}}" />
-  <input type="text" name="tel" value="{{contacto.2}}" />
-  <input type="text" name="email" value="{{contacto.3}}" />
-  <button type="submit">Actualizar</button>
-</form>
+          <div class="form-group mb-3">
+            <label for="tel" class="form-label fw-bold text-body">Teléfono de Contacto</label>
+            <input type="tel" 
+                   name="tel" 
+                   id="tel" 
+                   class="form-control form-control-lg" 
+                   value="{{ contacto.2 }}" 
+                   required>
+          </div>
 
+          <div class="form-group mb-4">
+            <label for="email" class="form-label fw-bold text-body">Correo Electrónico</label>
+            <input type="email" 
+                   name="email" 
+                   id="email" 
+                   class="form-control form-control-lg" 
+                   value="{{ contacto.3 }}" 
+                   required>
+          </div>
+
+          <div class="row g-2">
+            <div class="col-6">
+              <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg w-100 fw-bold">Cancelar</a>
+            </div>
+            <div class="col-6">
+              <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">Guardar</button>
+            </div>
+          </div>
+          
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
 {% endblock %}
